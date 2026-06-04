@@ -1,8 +1,16 @@
+using inaApp.Common.Interfaces;
+using inaApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+//Definir inyecciones de dependencias
+builder.Services.AddScoped<IProductoService, ProductoService>();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

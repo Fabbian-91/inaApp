@@ -1,46 +1,29 @@
-﻿using inaApp.Common.Interfaces;
-using inaApp.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inaApp.Api.Controllers
 {
-    [ApiController]
-    [Route("api/producto")]
-    public class ProductoController : Controller
+    public class ClienteController : Controller
     {
-
-        private readonly IProductoService _productoService;
-
-
-        //Inyección de dependencias
-        public ProductoController(IProductoService productoService)
-        {
-            this._productoService = productoService;
-            
-        }
-
-        // GET: ProductoController
-        [HttpGet]
+        // GET: ClienteController
         public ActionResult Index()
         {
-            _productoService.ObtenerTodoAsync();    
-            return Ok("Correcto prueba");
+            return View();
         }
 
-        // GET: ProductoController/Details/5
+        // GET: ClienteController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ProductoController/Create
+        // GET: ClienteController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ProductoController/Create
+        // POST: ClienteController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -55,13 +38,13 @@ namespace inaApp.Api.Controllers
             }
         }
 
-        // GET: ProductoController/Edit/5
+        // GET: ClienteController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ProductoController/Edit/5
+        // POST: ClienteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -76,13 +59,13 @@ namespace inaApp.Api.Controllers
             }
         }
 
-        // GET: ProductoController/Delete/5
+        // GET: ClienteController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ProductoController/Delete/5
+        // POST: ClienteController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
