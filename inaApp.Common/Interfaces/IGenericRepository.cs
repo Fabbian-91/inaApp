@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace inaApp.Common.Interfaces
 {
-    internal interface IClienteService
+    internal interface IGenricRepository
     {
     }
 }

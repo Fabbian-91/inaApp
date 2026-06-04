@@ -10,6 +10,15 @@ namespace inaApp.Services
 {
     public class ProductoService : IProductoService
     {
+
+        //Implementar a inyección de dependecias
+
+        private readonly IProductoRepository _productoRepo;
+
+        public ProductoService(IProductoRepository productRepo)
+        {
+            this._productoRepo = productRepo;
+        }
         public Task<Producto> ActualizarAsync(Producto producto)
         {
             throw new NotImplementedException();
@@ -37,7 +46,8 @@ namespace inaApp.Services
 
         public Task<List<Producto>> ObtenerTodoAsync()
         {
-            throw new NotImplementedException();
+            _productoRepo.ObtenerTodoAsync();
+            return null;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using inaApp.Common.Interfaces;
+using inaApp.Entites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,41 @@ using System.Threading.Tasks;
 
 namespace inaApp.Services
 {
-    internal class ClienteService
+    public class ClienteService : IClienteService
     {
+        //Inyección de dependeciaas
+        private readonly IClienteRepository _clienteRepo;
+
+        public ClienteService(IClienteRepository clienteRepo)
+        {
+            this._clienteRepo = clienteRepo;  
+        }
+        public Task<Cliente> ActualizarAsync(Cliente cliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Cliente> CrearAsync(Cliente cliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> EliminarAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Cliente> ObtenerPorIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Cliente>> obtenerTodosAsync()
+        {
+            //Viajar a la capa repository
+            _clienteRepo.obtenerTodosAsync();
+
+            return null;
+        }
     }
 }

@@ -1,14 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using inaApp.Common.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inaApp.Api.Controllers
 {
     public class ClienteController : Controller
     {
+        //Inyección de dependencias
+        private readonly IClienteService _clienteService;
+
+        public ClienteController(IClienteService clienteService)
+        {
+            this._clienteService = clienteService;
+        }
         // GET: ClienteController
         public ActionResult Index()
         {
-            return View();
+            //Viajar a la capa service
+            _clienteService.obtenerTodosAsync();
+            return Ok("Acción hecha");
         }
 
         // GET: ClienteController/Details/5

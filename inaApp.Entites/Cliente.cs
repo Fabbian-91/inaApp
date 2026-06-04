@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace inaApp.Entites
 {
-    internal class Cliente
+    public class Cliente
     {
+        //Atributos de la clase
+        public int Id { get; set; }
+        public string nombre { get; set; }
+        public string apellido1 { get; set; }
+        public string apellido2 { get; set; }
+        public DateTime fechaNac { get; set; }
+        public bool estado { get; set; }
     }
 }
