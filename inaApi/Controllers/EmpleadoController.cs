@@ -5,36 +5,37 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace inaApp.Api.Controllers
 {
-    public class ClienteController : Controller
+    public class EmpleadoController : Controller
     {
         //Inyección de dependencias
-        private readonly IGenericService<Cliente> _clienteService;
+        private readonly IGenericService<Empleado> service;
 
-        public ClienteController(IGenericService<Cliente> clienteService)
+
+        //Constructor de dependecias
+        public EmpleadoController(IGenericService<Empleado> service)
         {
-            this._clienteService = clienteService;
+            this.service = service;   
         }
-        // GET: ClienteController
+
+        // GET: EmpleadoController
         public ActionResult Index()
         {
-            //Viajar a la capa service
-            _clienteService.obtenerTodosAsync();
-            return Ok("Acción hecha");
+            return View();
         }
 
-        // GET: ClienteController/Details/5
+        // GET: EmpleadoController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ClienteController/Create
+        // GET: EmpleadoController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ClienteController/Create
+        // POST: EmpleadoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -49,13 +50,13 @@ namespace inaApp.Api.Controllers
             }
         }
 
-        // GET: ClienteController/Edit/5
+        // GET: EmpleadoController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ClienteController/Edit/5
+        // POST: EmpleadoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -70,13 +71,13 @@ namespace inaApp.Api.Controllers
             }
         }
 
-        // GET: ClienteController/Delete/5
+        // GET: EmpleadoController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ClienteController/Delete/5
+        // POST: EmpleadoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

@@ -1,3 +1,4 @@
+using inaApp.Api.Extensions;
 using inaApp.Common.Interfaces;
 using inaApp.Repository;
 using inaApp.Services;
@@ -8,13 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-//Definir inyecciones de dependencias para producto
-builder.Services.AddScoped<IProductoService, ProductoService>();
-builder.Services.AddScoped<IProductoRepository,ProductoRespository>();
-
-//Definir dependencias para Cliente
-builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+//Inyección de dependencias en archivos
+builder.Services.AddAplicaServices(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

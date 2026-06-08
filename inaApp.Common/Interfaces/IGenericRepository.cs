@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace inaApp.Common.Interfaces
 {
-    internal interface IGenricRepository
+    public interface IGenericRepository<E>
     {
+        //Firmas de los metodos
+        Task<List<E>> obtenerTodosAsync();
+
+        Task<E> ObtenerPorIdAsync(int id);
+
+        Task<E> CrearAsync(E entity);
+
+        Task<E> ActualizarAsync(E entity);
+
+        Task<bool> EliminarAsync(int id);
     }
 }

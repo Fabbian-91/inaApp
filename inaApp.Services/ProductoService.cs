@@ -8,35 +8,31 @@ using System.Threading.Tasks;
 
 namespace inaApp.Services
 {
-    public class ProductoService : IProductoService
+    public class ProductoService : IGenericService<Producto>
     {
 
         //Implementar a inyección de dependecias
 
-        private readonly IProductoRepository _productoRepo;
+        private readonly IGenericRepository<Producto> _producRepository;
 
-        public ProductoService(IProductoRepository productRepo)
+        public ProductoService(IGenericRepository<Producto> productRepo)
         {
-            this._productoRepo = productRepo;
+            this._producRepository = productRepo;
         }
-        public Task<Producto> ActualizarAsync(Producto producto)
+
+        public Task<Producto> ActualizarAsync(Producto entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Producto> CrearAsync(Producto producto)
+        public async Task<Producto> CrearAsync(Producto entity)
         {
-            throw new NotImplementedException();
+            return await _producRepository.CrearAsync(entity);
         }
 
-        public Task<bool> EliminarAsync(int id)
+        public async Task<bool> EliminarAsync(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Producto> ObtenerPorId(int id)
-        {
-            throw new NotImplementedException();
+            return await _producRepository.EliminarAsync(id);
         }
 
         public Task<Producto> ObtenerPorIdAsync(int id)
@@ -44,10 +40,9 @@ namespace inaApp.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Producto>> ObtenerTodoAsync()
+        public async Task<List<Producto>> obtenerTodosAsync()
         {
-            _productoRepo.ObtenerTodoAsync();
-            return null;
+            return await _producRepository.obtenerTodosAsync();
         }
     }
 }

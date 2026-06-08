@@ -10,13 +10,13 @@ namespace inaApp.Common.Interfaces
     public interface IGenericService<E>
     {
         //Firmas de los metodos
-        Task<List<E>> obtenerTodosAsync();
+        Task<List<E>> obtenerTodosAsync();//Task xq son metodos asincronicos
 
         Task<E> ObtenerPorIdAsync(int id);
 
-        Task<E> CrearAsync(E entidad);
+        Task<E> CrearAsync(E entity);
 
-        Task<E> ActualizarAsync(E entidad);
+        Task<E> ActualizarAsync(E entity);
 
         Task<bool> EliminarAsync(int id);
     }

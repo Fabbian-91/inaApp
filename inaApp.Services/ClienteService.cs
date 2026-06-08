@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace inaApp.Services
 {
-    public class ClienteService : IClienteService
+    public class ClienteService : IGenericService<Cliente>
     {
         //Inyección de dependeciaas
-        private readonly IClienteRepository _clienteRepo;
+        private readonly IGenericRepository<Cliente> _clienteRepo;
 
-        public ClienteService(IClienteRepository clienteRepo)
+        public ClienteService(IGenericRepository<Cliente> clienteRepo)
         {
             this._clienteRepo = clienteRepo;  
         }
@@ -37,12 +37,10 @@ namespace inaApp.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Cliente>> obtenerTodosAsync()
+        public async Task<List<Cliente>> obtenerTodosAsync()
         {
             //Viajar a la capa repository
-            _clienteRepo.obtenerTodosAsync();
-
-            return null;
+            return await _clienteRepo.obtenerTodosAsync();
         }
     }
 }

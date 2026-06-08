@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace inaApp.Entites
 {
-
-    //Niveles accesos
-    //public: cualquier clase puede acceder a este miembro
-    //private: solo la clase que lo define puede acceder a este miembro
-    //protected: solo la clase que lo define y las clases derivadas pueden acceder a este miembro
-    //internal: solo las clases dentro del mismo ensamblado pueden acceder a este miembro
+    [Table("tbProducto")]
     public class Producto
     {
-        //Propiedades de la clase
-        public int Id { get;}
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         public string Nombre { get; set; }
-        
+
+        [Column(TypeName ="decimal(18,2)")]
         public decimal Precio { get; set; }
 
         public int Stock { get; set; }

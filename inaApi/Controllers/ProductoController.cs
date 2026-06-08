@@ -1,100 +1,67 @@
 ﻿using inaApp.Common.Interfaces;
-using inaApp.Services;
-using Microsoft.AspNetCore.Http;
+using inaApp.Entites;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace inaApp.Api.Controllers
 {
     [ApiController]
-    [Route("api/producto")]
-    public class ProductoController : Controller
+    [Route("api/[controller]")]
+    public class ProductoController : ControllerBase
     {
+        private readonly IGenericService<Producto> _productoService;
 
-        private readonly IProductoService _productoService;
-
-
-        //Inyección de dependencias
-        public ProductoController(IProductoService productoService)
+        public ProductoController(IGenericService<Producto> productoService)
         {
-            this._productoService = productoService;
-            
+            _productoService = productoService;
         }
 
-        // GET: ProductoController
         [HttpGet]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            _productoService.ObtenerTodoAsync();    
-            return Ok("Correcto prueba");
+            var productos = await _productoService.obtenerTodosAsync();
+            return Ok(productos);
         }
 
-        // GET: ProductoController/Details/5
+        [HttpGet("{id}")]
         public ActionResult Details(int id)
         {
-            return View();
+            return Ok($"Detalle producto {id}");
         }
 
-        // GET: ProductoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ProductoController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create([FromBody] Producto producto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _productoService.CrearAsync(producto);
+                return Created("Producto Creado",result);
             }
-            catch
+            catch (Exception)
             {
-                return View();
+
+                return BadRequest("Erro al crar el producto");
             }
         }
 
-        // GET: ProductoController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("{id}")]
+        public ActionResult Edit(int id, [FromBody] Producto producto)
         {
-            return View();
+            return Ok($"Producto {id} editado");
         }
 
-        // POST: ProductoController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            try
+            if (id <= 0)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Error al eliminar, id Icorrecto");
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: ProductoController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            var result = await _productoService.EliminarAsync(id);
 
-        // POST: ProductoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return result ? Ok("Producto Eliminado") : BadRequest("Erro al eliminar el producot");
+
         }
     }
 }
