@@ -1,5 +1,6 @@
 ﻿using inaApp.Common.Interfaces;
 using inaApp.Entites;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 
@@ -24,9 +25,20 @@ namespace inaApp.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return Ok($"Detalle producto {id}");
+            try
+            {
+                var result=await _productoService.ObtenerPorIdAsync(id);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return NotFound();
+            }
+            
         }
 
         [HttpPost]
@@ -44,23 +56,56 @@ namespace inaApp.Api.Controllers
             }
         }
 
+
         [HttpPut("{id}")]
-        public ActionResult Edit(int id, [FromBody] Producto producto)
+        public async Task<ActionResult> Edit(int id, [FromBody] Producto producto)
         {
-            return Ok($"Producto {id} editado");
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("Id incorrecto");
+                }
+
+                var result = await _productoService.ActualizarAsync(id, producto);
+
+                if (result is null)
+                {
+                    return NotFound("Producto no encontrado");
+                }
+
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Producto no encontrado");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
+        
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            if (id <= 0)
+            try
             {
-                return BadRequest("Error al eliminar, id Icorrecto");
+                if (id <= 0)
+                {
+                    return BadRequest("Error al eliminar, id Icorrecto");
+                }
+
+                var result = await _productoService.EliminarAsync(id);
+
+                return result ? Ok("Producto Eliminado") : BadRequest("Erro al eliminar el producot");
             }
+            catch (Exception ex)
+            {
 
-            var result = await _productoService.EliminarAsync(id);
-
-            return result ? Ok("Producto Eliminado") : BadRequest("Erro al eliminar el producot");
+                return StatusCode(500, " Error 500");
+            }
 
         }
     }

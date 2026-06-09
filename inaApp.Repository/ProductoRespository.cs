@@ -20,12 +20,30 @@ namespace inaApp.Repository
         {
             _context = context;   
         }
-        public async Task<Producto> ActualizarAsync(Producto entity)
+        public async Task<Producto> ActualizarAsync(int id,Producto entity)
         {
             try
             {
-                _context.Producto.Update(entity);
-                await _context.SaveChangesAsync();
+                var producto = await _context.Producto.Where(x => x.Id == id && x.Estado == true).FirstOrDefaultAsync();
+
+                if (producto is null)
+                {
+                    throw new KeyNotFoundException("Usuario no encontrado");
+                }
+
+                await _context.Producto
+                    .Where(x => x.Id == id && x.Estado == true)
+                    .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(p => p.Nombre, entity.Nombre)
+                    .SetProperty(p => p.Precio, entity.Precio)
+                    .SetProperty(p => p.Descripcion, entity.Descripcion)
+                    );
+
+                //Seteamos entidad
+                entity.Id = id;
+                entity.Estado = true;
+
+                //Retornamos la entidad
                 return entity;
             }
             catch (Exception ex)

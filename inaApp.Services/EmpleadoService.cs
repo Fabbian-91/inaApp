@@ -18,7 +18,8 @@ namespace inaApp.Services
         {
             this.repository = repo;
         }
-        public Task<Empleado> ActualizarAsync(Empleado entity)
+
+        public Task<Empleado> ActualizarAsync(int id, Empleado entity)
         {
             throw new NotImplementedException();
         }

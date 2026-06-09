@@ -10,7 +10,7 @@ namespace inaApp.Repository
 {
     public class ClienteRepository : IGenericRepository<Cliente>
     {
-        public Task<Cliente> ActualizarAsync(Cliente cliente)
+        public Task<Cliente> ActualizarAsync(int id, Cliente entity)
         {
             throw new NotImplementedException();
         }

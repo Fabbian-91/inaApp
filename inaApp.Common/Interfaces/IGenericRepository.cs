@@ -15,7 +15,7 @@ namespace inaApp.Common.Interfaces
 
         Task<E> CrearAsync(E entity);
 
-        Task<E> ActualizarAsync(E entity);
+        Task<E> ActualizarAsync(int id,E entity);
 
         Task<bool> EliminarAsync(int id);
     }

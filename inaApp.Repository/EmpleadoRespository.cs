@@ -10,10 +10,11 @@ namespace inaApp.Repository
 {
     public class EmpleadoRespository : IGenericRepository<Empleado>
     {
-        Task<Empleado> IGenericRepository<Empleado>.ActualizarAsync(Empleado entity)
+        public Task<Empleado> ActualizarAsync(int id, Empleado entity)
         {
             throw new NotImplementedException();
         }
+
 
         Task<Empleado> IGenericRepository<Empleado>.CrearAsync(Empleado entity)
         {

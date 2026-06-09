@@ -17,7 +17,8 @@ namespace inaApp.Services
         {
             this._clienteRepo = clienteRepo;  
         }
-        public Task<Cliente> ActualizarAsync(Cliente cliente)
+
+        public Task<Cliente> ActualizarAsync(int id, Cliente entity)
         {
             throw new NotImplementedException();
         }
