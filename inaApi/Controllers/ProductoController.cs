@@ -60,7 +60,7 @@ namespace inaApp.Api.Controllers
             {
                 return Conflict(ex.Message);
             }
-            catch (DuplicateProductNameExeption ex)
+            catch (DuplicateNameException ex)
             {
                 return Conflict(ex.Message);
             }

@@ -50,7 +50,7 @@ namespace inaApp.Services
                 if (entity.Stock <= 0) throw new InvalidStockException("El stock debe ser una cantidad positiva");
 
                 //Validar nombre
-                if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameExeption($"El nombre {entity.Nombre} ya se encuentra agregado como producto");
+                if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como producto");
 
                 //Returnamos la respuesta del repositorio
                 return await _producRepository.CrearAsync(entity);

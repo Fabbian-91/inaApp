@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace inaApp.Common.Exceptions
 {
-    public class DuplicateNameExeption : Exception
+    public class DuplicateClientIdentificationException:Exception
     {
-        public DuplicateNameExeption()
+
+        public DuplicateClientIdentificationException()
         {
             
         }
 
-        public DuplicateNameExeption(string? message):base(message)
+        public DuplicateClientIdentificationException(string? message):base(message)
         {
             
         }

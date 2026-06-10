@@ -22,35 +22,59 @@ namespace inaApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("inaApp.Entites.Cliente", b =>
+            modelBuilder.Entity("Cliente", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdCliente")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCliente"));
 
-                    b.Property<string>("apellido1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("apellido2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("estado")
+                    b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("fechaNac")
+                    b.Property<string>("CorreoElectronico")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("nombre")
+                    b.Property<int>("IdTipoIdentificacion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("NumeroIdentificacion")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.ToTable("Cliente");
+                    b.Property<string>("PrimerApellido")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("SegundoApellido")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Telefono")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("TipoIdentificacion")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdCliente");
+
+                    b.HasIndex("TipoIdentificacion", "NumeroIdentificacion")
+                        .IsUnique();
+
+                    b.ToTable("tbCliente");
                 });
 
             modelBuilder.Entity("inaApp.Entites.Producto", b =>
