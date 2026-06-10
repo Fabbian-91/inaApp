@@ -1,4 +1,5 @@
-﻿using inaApp.Common.Interfaces;
+﻿using inaApp.Common.Exceptions;
+using inaApp.Common.Interfaces;
 using inaApp.Entites;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -29,13 +30,16 @@ namespace inaApp.Api.Controllers
         {
             try
             {
-                var result=await _productoService.ObtenerPorIdAsync(id);
+                var result = await _productoService.ObtenerPorIdAsync(id);
 
                 return Ok(result);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception)
             {
-
                 return NotFound();
             }
             
@@ -47,11 +51,21 @@ namespace inaApp.Api.Controllers
             try
             {
                 var result = await _productoService.CrearAsync(producto);
-                return Created("Producto Creado",result);
+                return Created("Producto Creado", result);
+            }
+            catch (InvalidPriceException ex) {
+                return Conflict(ex.Message);
+            }
+            catch (InvalidStockException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (DuplicateProductNameExeption ex)
+            {
+                return Conflict(ex.Message);
             }
             catch (Exception)
             {
-
                 return BadRequest("Erro al crar el producto");
             }
         }

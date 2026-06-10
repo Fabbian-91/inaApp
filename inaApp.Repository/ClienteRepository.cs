@@ -34,5 +34,15 @@ namespace inaApp.Repository
         {
             throw new NotImplementedException();
         }
+
+        public bool validarNombreRepetido(string nombre)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IGenericRepository<Cliente>.validarNombreRepetido(string nombre)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

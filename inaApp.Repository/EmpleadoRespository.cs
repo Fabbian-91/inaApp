@@ -15,6 +15,10 @@ namespace inaApp.Repository
             throw new NotImplementedException();
         }
 
+        public bool validarNombreRepetido(string nombre)
+        {
+            throw new NotImplementedException();
+        }
 
         Task<Empleado> IGenericRepository<Empleado>.CrearAsync(Empleado entity)
         {
@@ -32,6 +36,11 @@ namespace inaApp.Repository
         }
 
         Task<List<Empleado>> IGenericRepository<Empleado>.obtenerTodosAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IGenericRepository<Empleado>.validarNombreRepetido(string nombre)
         {
             throw new NotImplementedException();
         }

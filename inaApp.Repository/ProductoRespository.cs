@@ -28,7 +28,7 @@ namespace inaApp.Repository
 
                 if (producto is null)
                 {
-                    throw new KeyNotFoundException("Usuario no encontrado");
+                    return null;
                 }
 
                 await _context.Producto
@@ -95,15 +95,10 @@ namespace inaApp.Repository
         {
             try
             {
-                var entity= await _context.Producto.Where(x => x.Id == id && x.Estado == true).SingleOrDefaultAsync();
-
-                if (entity is null) throw new Exception("No se encontro laa entidad");
-
-                return entity;
+                return await _context.Producto.Where(x => x.Id == id && x.Estado == true).SingleOrDefaultAsync();
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -120,5 +115,11 @@ namespace inaApp.Repository
                 throw ex;
             }
         }
+
+        public async Task<bool> validarNombreRepetido(string nombre) { 
+            return await _context.Producto.AnyAsync(x => x.Nombre == nombre);
+        }
+
+        
     }
 }

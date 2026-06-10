@@ -18,5 +18,7 @@ namespace inaApp.Common.Interfaces
         Task<E> ActualizarAsync(int id,E entity);
 
         Task<bool> EliminarAsync(int id);
+
+        Task<bool> validarNombreRepetido(string nombre);
     }
 }
