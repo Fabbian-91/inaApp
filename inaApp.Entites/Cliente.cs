@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Table("tbCliente")]
-[Index(nameof(TipoIdentificacion), nameof(NumeroIdentificacion), IsUnique = true)]
+[Index(nameof(TipoIdentificacion), nameof(NumeroIdentificacion),IsUnique = true)]
+[Index(nameof(CorreoElectronico), IsUnique = true)]
 public class Cliente
 {
     [Key]

@@ -71,6 +71,10 @@ namespace inaApp.Data.Migrations
 
                     b.HasKey("IdCliente");
 
+                    b.HasIndex("CorreoElectronico")
+                        .IsUnique()
+                        .HasFilter("[CorreoElectronico] IS NOT NULL");
+
                     b.HasIndex("TipoIdentificacion", "NumeroIdentificacion")
                         .IsUnique();
 

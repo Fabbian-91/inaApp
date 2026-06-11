@@ -1,4 +1,4 @@
-﻿using inaApp.Common.Exceptions;
+﻿    using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
 using inaApp.Entites;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -54,11 +54,11 @@ namespace inaApp.Api.Controllers
                 return Created("Producto Creado", result);
             }
             catch (InvalidPriceException ex) {
-                return Conflict(ex.Message);
+                return BadRequest(ex.Message);
             }
             catch (InvalidStockException ex)
             {
-                return Conflict(ex.Message);
+                return BadRequest(ex.Message);
             }
             catch (DuplicateNameException ex)
             {

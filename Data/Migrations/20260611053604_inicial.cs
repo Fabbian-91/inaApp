@@ -51,6 +51,13 @@ namespace inaApp.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_tbCliente_CorreoElectronico",
+                table: "tbCliente",
+                column: "CorreoElectronico",
+                unique: true,
+                filter: "[CorreoElectronico] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tbCliente_TipoIdentificacion_NumeroIdentificacion",
                 table: "tbCliente",
                 columns: new[] { "TipoIdentificacion", "NumeroIdentificacion" },

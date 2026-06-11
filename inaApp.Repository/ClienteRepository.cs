@@ -67,9 +67,9 @@ namespace inaApp.Repository
 
                 throw new ConflictException("Ya existe un cliente con datos duplicados.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -87,9 +87,31 @@ namespace inaApp.Repository
                 //Devolver el cliente
                 return cliente;
             }
-            catch (Exception ex)
+            catch (DbUpdateException ex) when (
+            //Validar cuando ocurran errores de duplicados
+            ex.InnerException is SqlException sqlEx && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
             {
-                throw ex;
+                //Error de tipo de Número de identificación duplicado
+                if (sqlEx.Message.Contains("IX_tbCliente_TipoIdentificacion_NumeroIdentificacion"))
+                {
+                    throw new DuplicateClientIdentificationException(
+                        "Ya existe un cliente con ese tipo y número de identificación."
+                    );
+                }
+
+                //Errror de tipo de correo electrónico duplicado
+                if (sqlEx.Message.Contains("IX_tbCliente_CorreoElectronico"))
+                {
+                    throw new ClientEmailAlreadyExistsException(
+                        "Ya existe un cliente con ese correo electrónico."
+                    );
+                }
+
+                throw new ConflictException("Ya existe un cliente con datos duplicados.");
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
@@ -114,9 +136,9 @@ namespace inaApp.Repository
                 //Retornamos resultado
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -126,7 +148,7 @@ namespace inaApp.Repository
             try
             {
                 //Buscamos y extraemos el cliente
-                var cliente = await _context.Cliente
+                var cliente = await _context.Cliente.AsNoTracking()
                     .Where(x => x.IdCliente == id && x.Activo == true)
                     .SingleOrDefaultAsync();
 
@@ -139,9 +161,9 @@ namespace inaApp.Repository
                 //Retornamos el cliente
                 return cliente;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -151,13 +173,13 @@ namespace inaApp.Repository
             try
             {
                 //Extraer todos los clientes de la bd
-                return await _context.Cliente
+                return await _context.Cliente.AsNoTracking()
                     .Where(x => x.Activo == true)
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -170,9 +192,9 @@ namespace inaApp.Repository
                 return await _context.Cliente
                     .AnyAsync(x => x.Nombre == nombre && x.Activo == true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

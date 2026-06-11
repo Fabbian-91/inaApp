@@ -12,7 +12,7 @@ using inaApp.Data;
 namespace inaApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260610213300_inicial")]
+    [Migration("20260611053604_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -73,6 +73,10 @@ namespace inaApp.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdCliente");
+
+                    b.HasIndex("CorreoElectronico")
+                        .IsUnique()
+                        .HasFilter("[CorreoElectronico] IS NOT NULL");
 
                     b.HasIndex("TipoIdentificacion", "NumeroIdentificacion")
                         .IsUnique();
