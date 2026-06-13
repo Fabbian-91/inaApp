@@ -1,7 +1,7 @@
-﻿using inaApp.Common.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static inaApp.Common.Enums.Enumeradores;
 
 [Table("tbCliente")]
 [Index(nameof(TipoIdentificacion), nameof(NumeroIdentificacion),IsUnique = true)]

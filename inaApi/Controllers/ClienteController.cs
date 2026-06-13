@@ -1,5 +1,6 @@
 ﻿using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
+using inaApp.DTOs.cliente;
 using inaApp.Entites;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,9 @@ namespace inaApp.Api.Controllers
     public class ClienteController : Controller
     {
         //Inyección de dependencias
-        private readonly IGenericService<Cliente> _clienteService;
+        private readonly IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO> _clienteService;
 
-        public ClienteController(IGenericService<Cliente> clienteService)
+        public ClienteController(IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO> clienteService)
         {
             this._clienteService = clienteService;
         }
@@ -67,10 +68,11 @@ namespace inaApp.Api.Controllers
             try
             {
                 //Creamos el cliente
-                var result = await _clienteService.CrearAsync(cliente);
+                //var result = await _clienteService.CrearAsync(cliente);
 
                 //Retornamos el cliente creado
-                return Created($"/api/clientes/{result.IdCliente}", result);
+                //return Created($"/api/clientes/{result.IdCliente}", result);
+                return Ok(cliente);
             }
             //Capturamos errores de validaciones de negocio
             catch (BusinessValidationException ex)
@@ -97,12 +99,13 @@ namespace inaApp.Api.Controllers
 
         // POST: ClienteController/Edit/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, Cliente Cliente)
+        public async Task<ActionResult> Edit(int id, Cliente cliente)
         {
             try
             {
                 //Actualizamos el cliente
-                return Ok(await _clienteService.ActualizarAsync(id, Cliente));
+                //return Ok(await _clienteService.ActualizarAsync(id, Cliente));
+                return Ok(cliente);
             }
             //Capturamos errores de validaciones de negocio
             catch (BusinessValidationException ex)

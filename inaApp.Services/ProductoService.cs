@@ -1,5 +1,6 @@
 ﻿using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
+using inaApp.DTOs.Producto;
 using inaApp.Entites;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace inaApp.Services
 {
-    public class ProductoService : IGenericService<Producto>
+    public class ProductoService : IGenericService<ProductoResponseDTO,ProductoCreateDTO,ProductoUpdateDTO>
     {
 
         //Implementar a inyección de dependecias
@@ -21,7 +22,7 @@ namespace inaApp.Services
             this._producRepository = productRepo;
         }
 
-        public async Task<Producto> ActualizarAsync(int id,Producto entity)
+        public async Task<ProductoResponseDTO> ActualizarAsync(int id,ProductoUpdateDTO entity)
         {
             //Validar precio
             if (entity.Precio <= 0) throw new InvalidPriceException("El precio debe ser una cantidad positiva");
@@ -29,17 +30,17 @@ namespace inaApp.Services
             //Valida stock
             if (entity.Stock <= 0) throw new InvalidStockException("El stock debe ser una cantidad positiva");
 
-            var resul= await _producRepository.ActualizarAsync(id,entity);
+            //var resul= await _producRepository.ActualizarAsync(id,entity);
 
-            if (resul is null)
+            /*if (resul is null)
             {
                 throw new NotFoundException($"Usuario no encontrado");
-            }
+            }*/
 
-            return resul;
+            return null;
         }
 
-        public async Task<Producto> CrearAsync(Producto entity)
+        public async Task<ProductoResponseDTO> CrearAsync(ProductoCreateDTO entity)
         {
             try
             {
@@ -53,7 +54,8 @@ namespace inaApp.Services
                 if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como producto");
 
                 //Returnamos la respuesta del repositorio
-                return await _producRepository.CrearAsync(entity);
+                //return await _producRepository.CrearAsync(entity);
+                return null;
 
             }
             catch (Exception ex)
@@ -67,18 +69,18 @@ namespace inaApp.Services
             return await _producRepository.EliminarAsync(id);
         }
 
-        public async Task<Producto> ObtenerPorIdAsync(int id)
+        public async Task<ProductoResponseDTO> ObtenerPorIdAsync(int id)
         {
             try
             {
-                var producto = await _producRepository.ObtenerPorIdAsync(id);
+                //var producto = await _producRepository.ObtenerPorIdAsync(id);
 
-                if (producto is null)
+                /*if (producto is null)
                 {
                     throw new NotFoundException($"EL producto con id {id} no existe");
-                }
+                }*/
 
-                return producto;
+                return null;
             }
             catch (Exception)
             {
@@ -88,9 +90,10 @@ namespace inaApp.Services
             
         }
 
-        public async Task<List<Producto>> obtenerTodosAsync()
+        public async Task<List<ProductoResponseDTO>> obtenerTodosAsync()
         {
-            return await _producRepository.obtenerTodosAsync();
+            //return await _producRepository.obtenerTodosAsync();
+            return null;
         }
     }
 }

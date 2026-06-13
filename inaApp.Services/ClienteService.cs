@@ -1,16 +1,11 @@
-﻿using inaApp.Common.Enums;
-using inaApp.Common.Exceptions;
+﻿using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
-using inaApp.Entites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using inaApp.DTOs.cliente;
+using static inaApp.Common.Enums.Enumeradores;
 
 namespace inaApp.Services
 {
-    public class ClienteService : IGenericService<Cliente>
+    public class ClienteService : IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO>
     {
         private readonly IGenericRepository<Cliente> _clienteRepo;
 
@@ -19,7 +14,7 @@ namespace inaApp.Services
             _clienteRepo = clienteRepo;
         }
 
-        public async Task<Cliente> CrearAsync(Cliente cliente)
+        public async Task<ClienteResponseDTO> CrearAsync(ClienteCreateDTO cliente)
         {
             //Validar si el cliente viene nulo
             if (cliente == null)
@@ -46,18 +41,20 @@ namespace inaApp.Services
             }
 
             //Validar si el enum es permitido
-            if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)cliente.IdTipoIdentificacion))
+            /*if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)cliente.IdTipoIdentificacion))
             {
                 throw new BusinessValidationException("El tipo de identificación no es permitido");
-            }
+            }*/
 
             //Pasamos el tipo de identificación
-            cliente.TipoIdentificacion = (TipoIdentificacionEnum)cliente.IdTipoIdentificacion;
+            //cliente.TipoIdentificacion = (TipoIdentificacionEnum)cliente.IdTipoIdentificacion;
 
-            return await _clienteRepo.CrearAsync(cliente);
+            //return await _clienteRepo.CrearAsync(cliente);
+
+            return null;
         }
 
-        public async Task<Cliente> ActualizarAsync(int id, Cliente cliente)
+        public async Task<ClienteResponseDTO> ActualizarAsync(int id, ClienteUpdateDTO cliente)
         {
             //Validar si el id es permitido
             if (id <= 0)
@@ -84,7 +81,7 @@ namespace inaApp.Services
             }
 
             //Validar si el enum es permitido
-            if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)cliente.IdTipoIdentificacion))
+            /*if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)cliente.IdTipoIdentificacion))
             {
                 throw new BusinessValidationException("El tipo de identificación no es permitido");
             }
@@ -92,7 +89,9 @@ namespace inaApp.Services
             //Le pasamos el tipo de identificación
             cliente.TipoIdentificacion = (TipoIdentificacionEnum)cliente.IdTipoIdentificacion;
 
-            return await _clienteRepo.ActualizarAsync(id, cliente);
+            return await _clienteRepo.ActualizarAsync(id, cliente);*/
+
+            return null;
         }
 
         public async Task<bool> EliminarAsync(int id)
@@ -106,7 +105,7 @@ namespace inaApp.Services
             return await _clienteRepo.EliminarAsync(id);
         }
 
-        public async Task<Cliente> ObtenerPorIdAsync(int id)
+        public async Task<ClienteResponseDTO> ObtenerPorIdAsync(int id)
         {
             //Valiar si id es permitido
             if (id <= 0)
@@ -114,12 +113,14 @@ namespace inaApp.Services
                 throw new BusinessValidationException("El id del cliente no es válido.");
             }
 
-            return await _clienteRepo.ObtenerPorIdAsync(id);
+            //return await _clienteRepo.ObtenerPorIdAsync(id);
+            return null;
         }
 
-        public async Task<List<Cliente>> obtenerTodosAsync()
+        public async Task<List<ClienteResponseDTO>> obtenerTodosAsync()
         {
-            return await _clienteRepo.obtenerTodosAsync();
+            //return await _clienteRepo.obtenerTodosAsync();
+            return null;
         }
     }
 }

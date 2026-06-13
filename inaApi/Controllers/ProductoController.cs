@@ -1,5 +1,6 @@
 ﻿    using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
+using inaApp.DTOs.Producto;
 using inaApp.Entites;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace inaApp.Api.Controllers
     [Route("api/[controller]")]
     public class ProductoController : ControllerBase
     {
-        private readonly IGenericService<Producto> _productoService;
+        private readonly IGenericService<ProductoResponseDTO,ProductoCreateDTO,ProductoUpdateDTO> _productoService;
 
-        public ProductoController(IGenericService<Producto> productoService)
+        public ProductoController(IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO> productoService)
         {
             _productoService = productoService;
         }
@@ -46,10 +47,13 @@ namespace inaApp.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] Producto producto)
+        public async Task<ActionResult> Create([FromBody] ProductoCreateDTO producto)
         {
             try
             {
+                if (!ModelState.IsValid) 
+                    return BadRequest(ModelState);
+
                 var result = await _productoService.CrearAsync(producto);
                 return Created("Producto Creado", result);
             }
@@ -81,14 +85,16 @@ namespace inaApp.Api.Controllers
                     return BadRequest("Id incorrecto");
                 }
 
-                var result = await _productoService.ActualizarAsync(id, producto);
+                //var result = await _productoService.ActualizarAsync(id, producto);
 
-                if (result is null)
+                /*if (result is null)
                 {
                     return NotFound("Producto no encontrado");
                 }
 
-                return Ok(result);
+                return Ok(result);*/
+
+                return Ok(producto);
             }
             catch (KeyNotFoundException)
             {

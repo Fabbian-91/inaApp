@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace inaApp.Common.Interfaces
 {
-    public interface IGenericService<E>
+    public interface IGenericService<TResponse,TCreate,TUpdate>
     {
         //Firmas de los metodos
-        Task<List<E>> obtenerTodosAsync();//Task xq son metodos asincronicos
+        Task<List<TResponse>> obtenerTodosAsync();//Task xq son metodos asincronicos
 
-        Task<E> ObtenerPorIdAsync(int id);
+        Task<TResponse> ObtenerPorIdAsync(int id);
 
-        Task<E> CrearAsync(E entity);
+        Task<TResponse> CrearAsync(TCreate entity);
 
-        Task<E> ActualizarAsync(int id,E entity);
+        Task<TResponse> ActualizarAsync(int id,TUpdate entity);
 
         Task<bool> EliminarAsync(int id);
     }
