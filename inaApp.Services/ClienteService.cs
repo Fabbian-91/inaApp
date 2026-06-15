@@ -1,4 +1,5 @@
-﻿using inaApp.Common.Exceptions;
+﻿using AutoMapper;
+using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
 using inaApp.DTOs.cliente;
 using static inaApp.Common.Enums.Enumeradores;
@@ -8,10 +9,12 @@ namespace inaApp.Services
     public class ClienteService : IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO>
     {
         private readonly IGenericRepository<Cliente> _clienteRepo;
+        private readonly IMapper _mapper;
 
-        public ClienteService(IGenericRepository<Cliente> clienteRepo)
+        public ClienteService(IGenericRepository<Cliente> clienteRepo, IMapper mapper)
         {
             _clienteRepo = clienteRepo;
+            _mapper = mapper;   
         }
 
         public async Task<ClienteResponseDTO> CrearAsync(ClienteCreateDTO cliente)
@@ -40,18 +43,25 @@ namespace inaApp.Services
                 throw new BusinessValidationException("El correo electrónico es obligatorio.");
             }
 
+            //Convertir entidad
+            Cliente entity= _mapper.Map<Cliente>(cliente);
+
             //Validar si el enum es permitido
-            /*if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)cliente.IdTipoIdentificacion))
+            if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)entity.IdTipoIdentificacion))
             {
                 throw new BusinessValidationException("El tipo de identificación no es permitido");
-            }*/
+            }
 
             //Pasamos el tipo de identificación
-            //cliente.TipoIdentificacion = (TipoIdentificacionEnum)cliente.IdTipoIdentificacion;
+            entity.TipoIdentificacion = (TipoIdentificacionEnum)entity.IdTipoIdentificacion;
 
-            //return await _clienteRepo.CrearAsync(cliente);
+            //Extraemos el resul
+            Cliente result = await _clienteRepo.CrearAsync(entity);
+            //Mapeamos el cliente
+            ClienteResponseDTO response= _mapper.Map<ClienteResponseDTO>(result);
 
-            return null;
+            //Retornamos el response
+            return response;
         }
 
         public async Task<ClienteResponseDTO> ActualizarAsync(int id, ClienteUpdateDTO cliente)
@@ -80,18 +90,23 @@ namespace inaApp.Services
                 throw new BusinessValidationException("El correo electrónico es obligatorio.");
             }
 
+            Cliente clienMapper= _mapper.Map<Cliente>(cliente);
+           
+
             //Validar si el enum es permitido
-            /*if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)cliente.IdTipoIdentificacion))
+            if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)clienMapper.IdTipoIdentificacion))
             {
                 throw new BusinessValidationException("El tipo de identificación no es permitido");
             }
 
             //Le pasamos el tipo de identificación
-            cliente.TipoIdentificacion = (TipoIdentificacionEnum)cliente.IdTipoIdentificacion;
+            clienMapper.TipoIdentificacion = (TipoIdentificacionEnum)clienMapper.IdTipoIdentificacion;
 
-            return await _clienteRepo.ActualizarAsync(id, cliente);*/
+            Cliente result=await _clienteRepo.ActualizarAsync(id, clienMapper);
 
-            return null;
+            ClienteResponseDTO response = _mapper.Map<ClienteResponseDTO>(result);
+
+            return response;
         }
 
         public async Task<bool> EliminarAsync(int id)
@@ -113,14 +128,22 @@ namespace inaApp.Services
                 throw new BusinessValidationException("El id del cliente no es válido.");
             }
 
-            //return await _clienteRepo.ObtenerPorIdAsync(id);
-            return null;
+            //Extraer cliente
+            Cliente cliente = await _clienteRepo.ObtenerPorIdAsync(id);
+            //Mapeamos el cliente
+            ClienteResponseDTO response = _mapper.Map<ClienteResponseDTO>(cliente);
+            //Retornmos el reponse
+            return response;
         }
 
         public async Task<List<ClienteResponseDTO>> obtenerTodosAsync()
         {
-            //return await _clienteRepo.obtenerTodosAsync();
-            return null;
+            List<Cliente> list = await _clienteRepo.obtenerTodosAsync();
+
+            List<ClienteResponseDTO> response = _mapper.Map<List<ClienteResponseDTO>>(list);
+
+            return response;
+            
         }
     }
 }

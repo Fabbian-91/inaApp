@@ -1,0 +1,31 @@
+﻿using AutoMapper;
+using inaApp.DTOs.cliente;
+using inaApp.DTOs.Producto;
+using inaApp.Entites;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace inaApp.Services.Mapping
+{
+    public class MappingProfile: Profile//Profile para mappeo
+    {
+        public MappingProfile()
+        {
+            //Dto create a entity
+            CreateMap<ProductoCreateDTO, Producto>();
+            CreateMap<ClienteCreateDTO, Cliente>();
+
+            //Dto update a entity
+            CreateMap<ProductoUpdateDTO, Producto>();
+            CreateMap<ClienteUpdateDTO, Cliente>();
+
+            //Entity a Dto response
+            CreateMap<Producto,ProductoResponseDTO>();
+            CreateMap<Cliente,ClienteResponseDTO>();
+
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using inaApp.Common.Exceptions;
+﻿using AutoMapper;
+using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
 using inaApp.DTOs.Producto;
 using inaApp.Entites;
@@ -14,12 +15,13 @@ namespace inaApp.Services
     {
 
         //Implementar a inyección de dependecias
-
         private readonly IGenericRepository<Producto> _producRepository;
+        private readonly IMapper _mapper;
 
-        public ProductoService(IGenericRepository<Producto> productRepo)
+        public ProductoService(IGenericRepository<Producto> productRepo, IMapper mapper)
         {
             this._producRepository = productRepo;
+            this._mapper=mapper; 
         }
 
         public async Task<ProductoResponseDTO> ActualizarAsync(int id,ProductoUpdateDTO entity)
@@ -30,14 +32,21 @@ namespace inaApp.Services
             //Valida stock
             if (entity.Stock <= 0) throw new InvalidStockException("El stock debe ser una cantidad positiva");
 
-            //var resul= await _producRepository.ActualizarAsync(id,entity);
+            //Convertimos el dto a entidad
+            Producto producto=_mapper.Map<Producto>(entity);
+            //Extraemos el producto
+            var resul= await _producRepository.ActualizarAsync(id, producto);
 
-            /*if (resul is null)
+            //Validamos el producto
+            if (resul is null)
             {
                 throw new NotFoundException($"Usuario no encontrado");
-            }*/
+            }
 
-            return null;
+            //Convertimos el producto en dto
+            ProductoResponseDTO response= _mapper.Map<ProductoResponseDTO>(resul);
+            //Retornamos el response dto
+            return response;
         }
 
         public async Task<ProductoResponseDTO> CrearAsync(ProductoCreateDTO entity)
@@ -53,10 +62,30 @@ namespace inaApp.Services
                 //Validar nombre
                 if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como producto");
 
-                //Returnamos la respuesta del repositorio
-                //return await _producRepository.CrearAsync(entity);
-                return null;
+                /*Producto producto=new Producto
+                { 
+                    Nombre=entity.Nombre,
+                    Precio=entity.Precio,
+                    Stock=entity.Stock,
+                    Descripcion=entity.Descripcion,
+                    Estado=true
+                };*/
 
+                //Returnamos la respuesta del repositorio
+                Producto producto=_mapper.Map<Producto>(entity);
+                producto=await _producRepository.CrearAsync(producto);
+
+                /*ProductoResponseDTO productoResponse=new ProductoResponseDTO
+                {
+                    Id=producto.Id,
+                    Nombre = producto.Nombre,
+                    Precio = producto.Precio,
+                    Stock = producto.Stock,
+                    Descripcion = producto.Descripcion
+                };*/
+                
+                ProductoResponseDTO productoResponse=_mapper.Map<ProductoResponseDTO>(producto);
+                return productoResponse;
             }
             catch (Exception ex)
             {
@@ -66,6 +95,7 @@ namespace inaApp.Services
 
         public async Task<bool> EliminarAsync(int id)
         {
+            //Retornamos si se pudo eliminar
             return await _producRepository.EliminarAsync(id);
         }
 
@@ -73,18 +103,23 @@ namespace inaApp.Services
         {
             try
             {
-                //var producto = await _producRepository.ObtenerPorIdAsync(id);
+                //Extraemos el producto
+                var producto = await _producRepository.ObtenerPorIdAsync(id);
 
-                /*if (producto is null)
+                //Validamos el producto
+                if (producto is null)
                 {
                     throw new NotFoundException($"EL producto con id {id} no existe");
-                }*/
+                }
 
-                return null;
+                //Mapeamos
+                ProductoResponseDTO response = _mapper.Map<ProductoResponseDTO>(producto);
+
+                //retornamos el response
+                return response;
             }
             catch (Exception)
             {
-
                 throw;
             }
             
@@ -92,8 +127,14 @@ namespace inaApp.Services
 
         public async Task<List<ProductoResponseDTO>> obtenerTodosAsync()
         {
-            //return await _producRepository.obtenerTodosAsync();
-            return null;
+            //Extraemos la lista de productos
+            List<Producto> list=await _producRepository.obtenerTodosAsync();
+
+            //Mapeamos la lista
+            List<ProductoResponseDTO> response = _mapper.Map<List<ProductoResponseDTO>>(list);
+
+            //Retornamos el response
+            return response;
         }
     }
 }

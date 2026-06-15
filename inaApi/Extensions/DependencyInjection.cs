@@ -5,7 +5,9 @@ using inaApp.DTOs.Producto;
 using inaApp.Entites;
 using inaApp.Repository;
 using inaApp.Services;
+using inaApp.Services.Mapping;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace inaApp.Api.Extensions
 {
@@ -19,6 +21,9 @@ namespace inaApp.Api.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //profile auto mapper
+            services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
+
             //Inyecciones de dependencia de servicios
             services.AddScoped<IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO>, ProductoService>();
             services.AddScoped <IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO>, ClienteService>();
@@ -26,6 +31,9 @@ namespace inaApp.Api.Extensions
             //Inyección de dependencia de repostorios
             services.AddScoped<IGenericRepository<Producto>, ProductoRespository>();
             services.AddScoped<IGenericRepository<Cliente>, ClienteRepository>();
+
+
+            
 
             return services;
         }
