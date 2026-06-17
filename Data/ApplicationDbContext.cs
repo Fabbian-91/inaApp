@@ -19,6 +19,7 @@ namespace inaApp.Data
         //Entidades para la base de datos
         public DbSet<Producto> Producto { get; set; }
         public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<Categoria> Categoria { get; set; }
 
         //fluent api
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -18,18 +18,18 @@ namespace inaApp.Services.Mapping
             //Dto create a entity
             CreateMap<ProductoCreateDTO, Producto>();
             CreateMap<ClienteCreateDTO, Cliente>();
+            CreateMap<CategoriaCreateDTO, Categoria>();
 
 
             //Dto update a entity
             CreateMap<ProductoUpdateDTO, Producto>();
             CreateMap<ClienteUpdateDTO, Cliente>();
+            CreateMap<CategoriaUpdateDTO, Categoria>();
 
             //Entity a Dto response
             CreateMap<Producto,ProductoResponseDTO>();
             CreateMap<Cliente,ClienteResponseDTO>();
             CreateMap<Categoria, CategoriaResponseDTO>();
-
-
         }
     }
 }

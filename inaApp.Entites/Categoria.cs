@@ -19,6 +19,13 @@ namespace inaApp.Entites
         [StringLength(100,MinimumLength =3,ErrorMessage ="La categoria debe tener minimo 3 caracteres y maximo 100")]
         public string Nombre { get; set; } = string.Empty;
 
+        [StringLength(500,MinimumLength =10,ErrorMessage ="La descripcion debe tener minimo 10 caracteres y maximo 500")]
+        public string Descripcion { get; set; }=string.Empty;
+
+        public bool Estado { get; set; } = true;
+
+        public DateTime Date { get; set; }=DateTime.Now;
+
         //Relaciones
         public ICollection<Producto> Productos { get; set; } = new List<Producto>();
     }

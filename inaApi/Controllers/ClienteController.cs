@@ -71,7 +71,7 @@ namespace inaApp.Api.Controllers
                 var response = await _clienteService.CrearAsync(cliente);
 
                 //Retornamos el cliente creado
-                return Created("Producto Creado",response);
+                return Ok(response);
 
             }
             //Capturamos errores de validaciones de negocio
