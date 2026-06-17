@@ -1,4 +1,5 @@
-﻿using System;
+﻿using inaApp.DTOs.Categoria;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace inaApp.DTOs.Producto
         public decimal Precio { get; set; }
         public int Stock { get; set; }
         public string Descripcion { get; set; }
+        public CategoriaResponseDTO Categoria { get; set; }
     }
 }

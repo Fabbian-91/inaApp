@@ -24,5 +24,8 @@ namespace inaApp.DTOs.Producto
 
         [StringLength(500, ErrorMessage = "El maximo de caracteres para la descripción son 500 y el minimo 10.")]
         public string Descripcion { get; set; }
+
+        [Required(ErrorMessage = "La categoría es obligatoria.")]
+        public int CategoriaId { get; set; }
     }
 }

@@ -63,16 +63,16 @@ namespace inaApp.Api.Controllers
 
         // POST: ClienteController/Create
         [HttpPost]
-        public async Task<ActionResult> Create(Cliente cliente)
+        public async Task<ActionResult> Create(ClienteCreateDTO cliente)
         {
             try
             {
                 //Creamos el cliente
-                //var result = await _clienteService.CrearAsync(cliente);
+                var response = await _clienteService.CrearAsync(cliente);
 
                 //Retornamos el cliente creado
-                //return Created($"/api/clientes/{result.IdCliente}", result);
-                return Ok(cliente);
+                return Created("Producto Creado",response);
+
             }
             //Capturamos errores de validaciones de negocio
             catch (BusinessValidationException ex)
@@ -99,13 +99,12 @@ namespace inaApp.Api.Controllers
 
         // POST: ClienteController/Edit/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, Cliente cliente)
+        public async Task<ActionResult> Edit(int id, ClienteUpdateDTO cliente)
         {
             try
             {
                 //Actualizamos el cliente
-                //return Ok(await _clienteService.ActualizarAsync(id, Cliente));
-                return Ok(cliente);
+                return Ok(await _clienteService.ActualizarAsync(id, cliente));  
             }
             //Capturamos errores de validaciones de negocio
             catch (BusinessValidationException ex)

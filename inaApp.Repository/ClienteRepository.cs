@@ -19,37 +19,54 @@ namespace inaApp.Repository
         }
 
         //Metodo para actualizar un cliente
+        //Metodo para actualizar un cliente
         public async Task<Cliente> ActualizarAsync(int id, Cliente entity)
         {
             try
             {
-                //Actualizamos cliente
-                var resul = await _context.Cliente
-                    .Where(x => x.IdCliente == id && x.Activo == true)
-                    .ExecuteUpdateAsync(setters => setters
-                        .SetProperty(c => c.IdTipoIdentificacion, entity.IdTipoIdentificacion)
-                        .SetProperty(c => c.NumeroIdentificacion, entity.NumeroIdentificacion)
-                        .SetProperty(c => c.Nombre, entity.Nombre)
-                        .SetProperty(c => c.PrimerApellido, entity.PrimerApellido)
-                        .SetProperty(c => c.SegundoApellido, entity.SegundoApellido)
-                        .SetProperty(c => c.CorreoElectronico, entity.CorreoElectronico)
-                        .SetProperty(c => c.Telefono, entity.Telefono)
-                    );
+                //Buscamos el cliente activo por id
+                Cliente clienteExistente = await _context.Cliente
+                    .FirstOrDefaultAsync(x => x.IdCliente == id && x.Activo == true);
 
-                //Validamos si atualizo el cliente si la filas afectadas cambiaron
-                if (resul <= 0)
+                //Validamos si el cliente existe
+                if (clienteExistente == null)
                 {
                     throw new NotFoundException($"No se encontro un cliente activo con la el id {id}");
                 }
 
-                //Retornamos el primer cliente con ese id y que tenga estado true
-                return await _context.Cliente
-                    .FirstOrDefaultAsync(x => x.IdCliente == id && x.Activo == true);
+                //Actualizamos el id del tipo de identificación
+                clienteExistente.IdTipoIdentificacion = entity.IdTipoIdentificacion;
 
+                //Actualizamos el tipo de identificación
+                clienteExistente.TipoIdentificacion = entity.TipoIdentificacion;
+
+                //Actualizamos el número de identificación
+                clienteExistente.NumeroIdentificacion = entity.NumeroIdentificacion;
+
+                //Actualizamos el nombre
+                clienteExistente.Nombre = entity.Nombre;
+
+                //Actualizamos el primer apellido
+                clienteExistente.PrimerApellido = entity.PrimerApellido;
+
+                //Actualizamos el segundo apellido
+                clienteExistente.SegundoApellido = entity.SegundoApellido;
+
+                //Actualizamos el correo electrónico
+                clienteExistente.CorreoElectronico = entity.CorreoElectronico;
+
+                //Actualizamos el teléfono
+                clienteExistente.Telefono = entity.Telefono;
+
+                //Guardamos los cambios
+                await _context.SaveChangesAsync();
+
+                //Retornamos el cliente actualizado
+                return clienteExistente;
             }
             catch (DbUpdateException ex) when (
             //Validar cuando ocurran errores de duplicados
-            ex.InnerException is SqlException sqlEx && (sqlEx.Number==2601 || sqlEx.Number==2627))
+            ex.InnerException is SqlException sqlEx && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
             {
                 if (sqlEx.Message.Contains("IX_tbCliente_TipoIdentificacion_NumeroIdentificacion"))
                 {
@@ -72,8 +89,7 @@ namespace inaApp.Repository
                 throw;
             }
         }
-
-        //Metodo para crear un cliente
+   
         public async Task<Cliente> CrearAsync(Cliente cliente)
         {
             try

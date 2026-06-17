@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
+using inaApp.Common.Response;
 using inaApp.DTOs.Producto;
+
 using inaApp.Entites;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace inaApp.Services
             this._mapper=mapper; 
         }
 
-        public async Task<ProductoResponseDTO> ActualizarAsync(int id,ProductoUpdateDTO entity)
+        public async Task<ApiResponse<ProductoResponseDTO>> ActualizarAsync(int id,ProductoUpdateDTO entity)
         {
             //Validar precio
             if (entity.Precio <= 0) throw new InvalidPriceException("El precio debe ser una cantidad positiva");
@@ -46,15 +48,20 @@ namespace inaApp.Services
             //Convertimos el producto en dto
             ProductoResponseDTO response= _mapper.Map<ProductoResponseDTO>(resul);
             //Retornamos el response dto
-            return response;
+            return new ApiResponse<ProductoResponseDTO>
+            {
+                Data = _mapper.Map<ProductoResponseDTO>(resul),
+                Message = "Producto Actualizado exitozamente",
+                Success = true,
+            };
         }
 
-        public async Task<ProductoResponseDTO> CrearAsync(ProductoCreateDTO entity)
+        public async Task<ApiResponse<ProductoResponseDTO>> CrearAsync(ProductoCreateDTO entity)
         {
             try
             {
                 //Validar precio
-                if (entity.Precio<=0) throw new InvalidPriceException("El precio debe ser una cantidad positiva");
+                if (entity.Precio <= 0) throw new InvalidPriceException("El precio debe ser una cantidad positiva");
 
                 //Valida stock
                 if (entity.Stock <= 0) throw new InvalidStockException("El stock debe ser una cantidad positiva");
@@ -72,8 +79,8 @@ namespace inaApp.Services
                 };*/
 
                 //Returnamos la respuesta del repositorio
-                Producto producto=_mapper.Map<Producto>(entity);
-                producto=await _producRepository.CrearAsync(producto);
+                Producto producto = _mapper.Map<Producto>(entity);
+                producto = await _producRepository.CrearAsync(producto);
 
                 /*ProductoResponseDTO productoResponse=new ProductoResponseDTO
                 {
@@ -83,9 +90,13 @@ namespace inaApp.Services
                     Stock = producto.Stock,
                     Descripcion = producto.Descripcion
                 };*/
-                
-                ProductoResponseDTO productoResponse=_mapper.Map<ProductoResponseDTO>(producto);
-                return productoResponse;
+
+                return new ApiResponse<ProductoResponseDTO>
+                {
+                    Data = _mapper.Map<ProductoResponseDTO>(producto),
+                    Message = "Producto creado con exito",
+                    Success = true,
+                };
             }
             catch (Exception ex)
             {
@@ -93,13 +104,18 @@ namespace inaApp.Services
             }
         }
 
-        public async Task<bool> EliminarAsync(int id)
+        public async Task<ApiResponse<bool>> EliminarAsync(int id)
         {
             //Retornamos si se pudo eliminar
-            return await _producRepository.EliminarAsync(id);
+            return new ApiResponse<bool>
+            {
+                Data = await _producRepository.EliminarAsync(id),
+                Message = "Producto eliminado exitosamente",
+                Success = true,
+            };
         }
 
-        public async Task<ProductoResponseDTO> ObtenerPorIdAsync(int id)
+        public async Task<ApiResponse<ProductoResponseDTO>> ObtenerPorIdAsync(int id)
         {
             try
             {
@@ -116,7 +132,12 @@ namespace inaApp.Services
                 ProductoResponseDTO response = _mapper.Map<ProductoResponseDTO>(producto);
 
                 //retornamos el response
-                return response;
+                return new ApiResponse<ProductoResponseDTO>
+                { 
+                    Data = _mapper.Map<ProductoResponseDTO>(producto),
+                    Message = "Producto Obtenido Exitosamente",
+                    Success = true,
+                };
             }
             catch (Exception)
             {
@@ -125,7 +146,7 @@ namespace inaApp.Services
             
         }
 
-        public async Task<List<ProductoResponseDTO>> obtenerTodosAsync()
+        public async Task<ApiResponse<List<ProductoResponseDTO>>> obtenerTodosAsync()
         {
             //Extraemos la lista de productos
             List<Producto> list=await _producRepository.obtenerTodosAsync();
@@ -134,7 +155,12 @@ namespace inaApp.Services
             List<ProductoResponseDTO> response = _mapper.Map<List<ProductoResponseDTO>>(list);
 
             //Retornamos el response
-            return response;
+            return new ApiResponse<List<ProductoResponseDTO>>
+            { 
+                Data= _mapper.Map<List<ProductoResponseDTO>>(list),
+                Message ="Productos obtenidos exitosamente",
+                Success = true,
+            };
         }
     }
 }

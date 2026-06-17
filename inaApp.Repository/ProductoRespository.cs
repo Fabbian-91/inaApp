@@ -44,7 +44,9 @@ namespace inaApp.Repository
                 entity.Estado = true;
 
                 //Retornamos la entidad
-                return entity;
+                return await _context.Producto
+                  .Include(p => p.Categoria)
+                  .FirstOrDefaultAsync(p => p.Id == id && p.Estado == true);
             }
             catch (Exception ex)
             {
@@ -57,9 +59,14 @@ namespace inaApp.Repository
         {
             try
             {
+                entity.Estado = true;
+
                 await _context.Producto.AddAsync(entity);
                 await _context.SaveChangesAsync();
-                return entity;
+
+                return await _context.Producto
+                .Include(p => p.Categoria)
+                .FirstOrDefaultAsync(p => p.Id == entity.Id);
             }
             catch (Exception ex)
             {
@@ -95,7 +102,7 @@ namespace inaApp.Repository
         {
             try
             {
-                return await _context.Producto.Where(x => x.Id == id && x.Estado == true).SingleOrDefaultAsync();
+                return await _context.Producto.Where(x => x.Id == id && x.Estado == true).Include(p => p.Categoria).SingleOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -108,7 +115,10 @@ namespace inaApp.Repository
             try
             {
                 //Obtener lista de Productos, donde los estados este activos|
-                return await _context.Producto.Where(x=> x.Estado==true).ToListAsync();
+                return await _context.Producto
+                    .Where(x=> x.Estado==true)
+                    .Include(p=>p.Categoria)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {

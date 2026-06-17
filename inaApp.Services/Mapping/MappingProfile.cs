@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using inaApp.DTOs.Categoria;
 using inaApp.DTOs.cliente;
 using inaApp.DTOs.Producto;
 using inaApp.Entites;
@@ -18,6 +19,7 @@ namespace inaApp.Services.Mapping
             CreateMap<ProductoCreateDTO, Producto>();
             CreateMap<ClienteCreateDTO, Cliente>();
 
+
             //Dto update a entity
             CreateMap<ProductoUpdateDTO, Producto>();
             CreateMap<ClienteUpdateDTO, Cliente>();
@@ -25,6 +27,8 @@ namespace inaApp.Services.Mapping
             //Entity a Dto response
             CreateMap<Producto,ProductoResponseDTO>();
             CreateMap<Cliente,ClienteResponseDTO>();
+            CreateMap<Categoria, CategoriaResponseDTO>();
+
 
         }
     }

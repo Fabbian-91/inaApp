@@ -1,5 +1,6 @@
 ﻿    using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
+using inaApp.Common.Response;
 using inaApp.DTOs.Producto;
 using inaApp.Entites;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -22,8 +23,8 @@ namespace inaApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var productos = await _productoService.obtenerTodosAsync();
-            return Ok(productos);
+            var response = await _productoService.obtenerTodosAsync();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -31,9 +32,9 @@ namespace inaApp.Api.Controllers
         {
             try
             {
-                var result = await _productoService.ObtenerPorIdAsync(id);
+                var response = await _productoService.ObtenerPorIdAsync(id);
 
-                return Ok(result);
+                return Ok(response);
             }
             catch (NotFoundException ex)
             {
@@ -54,8 +55,8 @@ namespace inaApp.Api.Controllers
                 if (!ModelState.IsValid) 
                     return BadRequest(ModelState);
 
-                var result = await _productoService.CrearAsync(producto);
-                return Created("Producto Creado", result);
+                var response = await _productoService.CrearAsync(producto);
+                return Ok(response);
             }
             catch (InvalidPriceException ex) {
                 return BadRequest(ex.Message);
@@ -70,13 +71,13 @@ namespace inaApp.Api.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Erro al crar el producto");
+                return BadRequest("Error al crar el producto");
             }
         }
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, [FromBody] Producto producto)
+        public async Task<ActionResult> Edit(int id, [FromBody] ProductoUpdateDTO producto)
         {
             try
             {
@@ -85,16 +86,10 @@ namespace inaApp.Api.Controllers
                     return BadRequest("Id incorrecto");
                 }
 
-                //var result = await _productoService.ActualizarAsync(id, producto);
+                var response = await _productoService.ActualizarAsync(id, producto);
 
-                /*if (result is null)
-                {
-                    return NotFound("Producto no encontrado");
-                }
-
-                return Ok(result);*/
-
-                return Ok(producto);
+                
+                return Ok(response);
             }
             catch (KeyNotFoundException)
             {
@@ -105,7 +100,7 @@ namespace inaApp.Api.Controllers
                 return StatusCode(500, "Error interno del servidor");
             }
         }
-        
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
@@ -114,19 +109,29 @@ namespace inaApp.Api.Controllers
             {
                 if (id <= 0)
                 {
-                    return BadRequest("Error al eliminar, id Icorrecto");
+                    return BadRequest(new ApiResponse<bool>
+                    {
+                        Data = false,
+                        Message = "Error al eliminar, id incorrecto",
+                        Success = false
+                    });
                 }
 
-                var result = await _productoService.EliminarAsync(id);
+                var response = await _productoService.EliminarAsync(id);
 
-                return result ? Ok("Producto Eliminado") : BadRequest("Erro al eliminar el producot");
+                return response.Data
+                    ? Ok(response)
+                    : BadRequest(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                return StatusCode(500, " Error 500");
+                return StatusCode(500, new ApiResponse<bool>
+                {
+                    Data = false,
+                    Message = "Error interno del servidor",
+                    Success = false
+                });
             }
-
         }
     }
 }

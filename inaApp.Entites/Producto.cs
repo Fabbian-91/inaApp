@@ -27,5 +27,10 @@ namespace inaApp.Entites
         public string Descripcion { get; set; }
 
         public bool Estado { get; set; } = true;
+
+        //Relaciones
+        public int CategoriaId { get; set; }
+
+        public Categoria Categoria { get; set; } = null!;
     }
 }

@@ -19,5 +19,24 @@ namespace inaApp.Data
         //Entidades para la base de datos
         public DbSet<Producto> Producto { get; set; }
         public DbSet<Cliente> Cliente { get; set; }
+
+        //fluent api
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Relacion de Producto
+            modelBuilder.Entity<Producto>()
+                .HasOne(p => p.Categoria)
+                .WithMany(c => c.Productos)
+                .HasForeignKey(p => p.CategoriaId);
+
+            //Relación de Categoria
+            modelBuilder.Entity<Categoria>()
+                .HasMany(c => c.Productos)
+                .WithOne(p => p.Categoria)
+                .HasForeignKey(p => p.CategoriaId);
+
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using inaApp.Common.Exceptions;
 using inaApp.Common.Interfaces;
+using inaApp.Common.Response;
 using inaApp.DTOs.cliente;
 using static inaApp.Common.Enums.Enumeradores;
 
@@ -14,10 +15,10 @@ namespace inaApp.Services
         public ClienteService(IGenericRepository<Cliente> clienteRepo, IMapper mapper)
         {
             _clienteRepo = clienteRepo;
-            _mapper = mapper;   
+            _mapper = mapper;
         }
 
-        public async Task<ClienteResponseDTO> CrearAsync(ClienteCreateDTO cliente)
+        public async Task<ApiResponse<ClienteResponseDTO>> CrearAsync(ClienteCreateDTO cliente)
         {
             //Validar si el cliente viene nulo
             if (cliente == null)
@@ -44,7 +45,7 @@ namespace inaApp.Services
             }
 
             //Convertir entidad
-            Cliente entity= _mapper.Map<Cliente>(cliente);
+            Cliente entity = _mapper.Map<Cliente>(cliente);
 
             //Validar si el enum es permitido
             if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)entity.IdTipoIdentificacion))
@@ -58,13 +59,18 @@ namespace inaApp.Services
             //Extraemos el resul
             Cliente result = await _clienteRepo.CrearAsync(entity);
             //Mapeamos el cliente
-            ClienteResponseDTO response= _mapper.Map<ClienteResponseDTO>(result);
+            ClienteResponseDTO response = _mapper.Map<ClienteResponseDTO>(result);
 
             //Retornamos el response
-            return response;
+            return new ApiResponse<ClienteResponseDTO>
+            {
+                Data = response,
+                Message = "Cliente creado exitosamente",
+                Success = true
+            };
         }
 
-        public async Task<ClienteResponseDTO> ActualizarAsync(int id, ClienteUpdateDTO cliente)
+        public async Task<ApiResponse<ClienteResponseDTO>> ActualizarAsync(int id, ClienteUpdateDTO cliente)
         {
             //Validar si el id es permitido
             if (id <= 0)
@@ -90,26 +96,42 @@ namespace inaApp.Services
                 throw new BusinessValidationException("El correo electrónico es obligatorio.");
             }
 
-            Cliente clienMapper= _mapper.Map<Cliente>(cliente);
-           
+            //Validar si el tipo de identificación viene nulo
+            if (!cliente.TipoIdentificacion.HasValue)
+            {
+                throw new BusinessValidationException("El tipo de identificación es obligatorio.");
+            }
 
             //Validar si el enum es permitido
-            if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), (TipoIdentificacionEnum)clienMapper.IdTipoIdentificacion))
+            if (!Enum.IsDefined(typeof(TipoIdentificacionEnum), cliente.TipoIdentificacion.Value))
             {
                 throw new BusinessValidationException("El tipo de identificación no es permitido");
             }
 
+            //Mapeamos el DTO a la entidad Cliente
+            Cliente clienMapper = _mapper.Map<Cliente>(cliente);
+
             //Le pasamos el tipo de identificación
-            clienMapper.TipoIdentificacion = (TipoIdentificacionEnum)clienMapper.IdTipoIdentificacion;
+            clienMapper.TipoIdentificacion = cliente.TipoIdentificacion.Value;
 
-            Cliente result=await _clienteRepo.ActualizarAsync(id, clienMapper);
+            //Le pasamos el id del tipo de identificación
+            clienMapper.IdTipoIdentificacion = (int)cliente.TipoIdentificacion.Value;
 
+            //Actualizamos el cliente
+            Cliente result = await _clienteRepo.ActualizarAsync(id, clienMapper);
+
+            //Mapeamos la entidad actualizada al DTO de respuesta
             ClienteResponseDTO response = _mapper.Map<ClienteResponseDTO>(result);
 
-            return response;
+            return new ApiResponse<ClienteResponseDTO>
+            {
+                Data = response,
+                Message = "Cliente actualizado exitosamente",
+                Success = true
+            };
         }
 
-        public async Task<bool> EliminarAsync(int id)
+        public async Task<ApiResponse<bool>> EliminarAsync(int id)
         {
             //Validar si el id es permitdo
             if (id <= 0)
@@ -117,10 +139,17 @@ namespace inaApp.Services
                 throw new BusinessValidationException("El id del cliente no es válido.");
             }
 
-            return await _clienteRepo.EliminarAsync(id);
+            bool response = await _clienteRepo.EliminarAsync(id);
+
+            return new ApiResponse<bool>
+            {
+                Data = response,
+                Message = "Cliente eliminado exitosamente",
+                Success = true
+            };
         }
 
-        public async Task<ClienteResponseDTO> ObtenerPorIdAsync(int id)
+        public async Task<ApiResponse<ClienteResponseDTO>> ObtenerPorIdAsync(int id)
         {
             //Valiar si id es permitido
             if (id <= 0)
@@ -133,17 +162,27 @@ namespace inaApp.Services
             //Mapeamos el cliente
             ClienteResponseDTO response = _mapper.Map<ClienteResponseDTO>(cliente);
             //Retornmos el reponse
-            return response;
+            return new ApiResponse<ClienteResponseDTO>
+            {
+                Data = response,
+                Message = "Cliente obtenido exitosamente",
+                Success = true
+            };
         }
 
-        public async Task<List<ClienteResponseDTO>> obtenerTodosAsync()
+        public async Task<ApiResponse<List<ClienteResponseDTO>>> obtenerTodosAsync()
         {
             List<Cliente> list = await _clienteRepo.obtenerTodosAsync();
 
             List<ClienteResponseDTO> response = _mapper.Map<List<ClienteResponseDTO>>(list);
 
-            return response;
-            
+            return new ApiResponse<List<ClienteResponseDTO>>
+            {
+                Data = response,
+                Message = "Clientes obtenidos exitosamente",
+                Success = true
+            };
+
         }
     }
 }

@@ -9,7 +9,7 @@ namespace inaApp.DTOs.cliente
 {
     public class ClienteResponseDTO
     {
-        public int Id { get; set; }
+        public int IdCliente { get; set; }
 
         public TipoIdentificacionEnum TipoIdentificacion { get; set; }
 
