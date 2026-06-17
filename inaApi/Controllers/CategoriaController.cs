@@ -1,26 +1,24 @@
 ﻿using inaApp.Common.Exceptions;
 using inaApp.DTOs.Categoria;
 using inaApp.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace inaApp.Api.Controllers
 {
     [ApiController]
-    [Route("ap/[contorller]")]
-    public class CategoriaController : Controller
+    [Route("api/[controller]")]
+    public class CategoriaController : ControllerBase
     {
         //Inyección de dependencias
         private readonly CategoriaService _service;
 
         public CategoriaController(CategoriaService service)
-        { 
+        {
             _service = service;
         }
 
         // GET: CategoriaController
-
         [HttpGet]
         public async Task<ActionResult> Index()
         {
@@ -58,12 +56,9 @@ namespace inaApp.Api.Controllers
             }
         }
 
-
-
         // POST: CategoriaController/Create
         [HttpPost]
-
-        public async Task<ActionResult> Create(CategoriaCreateDTO categoria)
+        public async Task<ActionResult> Create([FromBody] CategoriaCreateDTO categoria)
         {
             try
             {
@@ -86,17 +81,15 @@ namespace inaApp.Api.Controllers
             {
                 return BadRequest("Error al crear la categoria");
             }
-
         }
-
-
 
         // POST: CategoriaController/Edit/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, CategoriaUpdateDTO categoria)
+        public async Task<ActionResult> Edit(int id, [FromBody] CategoriaUpdateDTO categoria)
         {
             try
             {
+                //Actualizamos la categoria
                 return Ok(await _service.ActualizarAsync(id, categoria));
             }
             catch (BusinessValidationException ex)
@@ -111,19 +104,23 @@ namespace inaApp.Api.Controllers
             {
                 return Conflict(ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception)
             {
-                return BadRequest("Error al crear la categoria");
+                return BadRequest("Error al actualizar la categoria");
             }
-
         }
 
-
+        // DELETE: CategoriaController/Delete/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
+                //Eliminamos la categoria
                 return Ok(await _service.EliminarAsync(id));
             }
             catch (BusinessValidationException ex)
@@ -132,7 +129,7 @@ namespace inaApp.Api.Controllers
             }
             catch (NotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (Exception)
             {

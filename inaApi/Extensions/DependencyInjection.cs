@@ -8,7 +8,6 @@ using inaApp.Repository;
 using inaApp.Services;
 using inaApp.Services.Mapping;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace inaApp.Api.Extensions
 {
@@ -27,16 +26,21 @@ namespace inaApp.Api.Extensions
 
             //Inyecciones de dependencia de servicios
             services.AddScoped<IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO>, ProductoService>();
-            services.AddScoped <IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO>, ClienteService>();
+            services.AddScoped<IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO>, ClienteService>();
             services.AddScoped<IGenericService<CategoriaResponseDTO, CategoriaCreateDTO, CategoriaUpdateDTO>, CategoriaService>();
+
+            //Inyección directa de servicios
+            //Esto permite inyectar CategoriaService directamente en el CategoriaController
+            services.AddScoped<CategoriaService>();
 
             //Inyección de dependencia de repostorios
             services.AddScoped<IGenericRepository<Producto>, ProductoRespository>();
             services.AddScoped<IGenericRepository<Cliente>, ClienteRepository>();
             services.AddScoped<IGenericRepository<Categoria>, CategoriaRepository>();
 
-
-
+            //Inyección directa de repositorios
+            //Esto permite inyectar CategoriaRepository directamente en CategoriaService
+            services.AddScoped<CategoriaRepository>();
 
             return services;
         }
