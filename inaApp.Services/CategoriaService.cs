@@ -35,6 +35,9 @@ namespace inaApp.Services
             //Validar nombre de la entidad
             if (string.IsNullOrWhiteSpace(entity.Nombre)) throw new BusinessValidationException("Los del nombre de categoria son obligatorio.");
 
+            //Validar si el nombre ya esta registrado
+            if (await _repository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como categoria.");
+
             //Mapeamos el request
             Categoria categoria=_mapper.Map<Categoria>(entity);
 
@@ -60,6 +63,9 @@ namespace inaApp.Services
 
             //Validar nombre de la entidad
             if (string.IsNullOrWhiteSpace(entity.Nombre)) throw new BusinessValidationException("Los del nombre de categoria son obligatorio");
+
+            //Validar si el nombre ya esta registrado
+            if(await _repository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como categoria.");
 
             //Mapeamos la entidad
             Categoria categoria = _mapper.Map<Categoria>(entity);

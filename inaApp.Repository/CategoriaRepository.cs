@@ -35,6 +35,7 @@ namespace inaApp.Repository
                     throw new NotFoundException($"No se encontro un cliente activo con la el id {id}");
                 }
 
+
                 //Actualizamos la entidad
                 await _context.Categoria
                     .Where(c => c.Estado == true)
@@ -174,7 +175,7 @@ namespace inaApp.Repository
             try
             {
                 //Retornamos un booleano si existe
-                return await _context.Categoria.AnyAsync();
+                return await _context.Categoria.AnyAsync(c => c.Nombre.ToLower()==nombre.ToLower());
             }
             catch (Exception)
             {

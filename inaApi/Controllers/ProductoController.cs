@@ -52,13 +52,14 @@ namespace inaApp.Api.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) 
+                if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
                 var response = await _productoService.CrearAsync(producto);
                 return Ok(response);
             }
-            catch (InvalidPriceException ex) {
+            catch (InvalidPriceException ex)
+            {
                 return BadRequest(ex.Message);
             }
             catch (InvalidStockException ex)
@@ -69,9 +70,14 @@ namespace inaApp.Api.Controllers
             {
                 return Conflict(ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception)
             {
-                return BadRequest("Error al crar el producto");
+
+                return BadRequest("Error al crear el producto");
             }
         }
 
@@ -88,12 +94,20 @@ namespace inaApp.Api.Controllers
 
                 var response = await _productoService.ActualizarAsync(id, producto);
 
-                
+
                 return Ok(response);
             }
             catch (KeyNotFoundException)
             {
                 return NotFound("Producto no encontrado");
+            }
+            catch (DuplicateNameException ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

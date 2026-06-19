@@ -1,4 +1,5 @@
-﻿using inaApp.Common.Interfaces;
+﻿using inaApp.Common.Exceptions;
+using inaApp.Common.Interfaces;
 using inaApp.Data;
 using inaApp.Entites;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace inaApp.Repository
 {
-    public class ProductoRespository : IGenericRepository<Producto>
+    public class ProductoRespository : IProductoRepository<Producto>
     {
 
         private readonly ApplicationDbContext _context;
@@ -30,6 +31,8 @@ namespace inaApp.Repository
                 {
                     return null;
                 }
+
+
 
                 await _context.Producto
                     .Where(x => x.Id == id && x.Estado == true)
@@ -93,7 +96,6 @@ namespace inaApp.Repository
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -127,9 +129,17 @@ namespace inaApp.Repository
         }
 
         public async Task<bool> validarNombreRepetido(string nombre) { 
-            return await _context.Producto.AnyAsync(x => x.Nombre == nombre);
+            //Validar que el nombre no este repetido
+            return await _context.Producto.AnyAsync(x => x.Nombre.ToLower() == nombre.ToLower());
         }
 
-        
+
+        public async Task<bool> ValidarCategoriaProducto(int id)
+        {
+            //Retornamos si la categoria existe o se encuentra activa
+            return await _context.Categoria
+                .AnyAsync(c => c.Id == id && c.Estado == true);
+        }
+
     }
 }

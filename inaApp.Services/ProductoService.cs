@@ -17,10 +17,10 @@ namespace inaApp.Services
     {
 
         //Implementar a inyección de dependecias
-        private readonly IGenericRepository<Producto> _producRepository;
+        private readonly IProductoRepository<Producto> _producRepository;
         private readonly IMapper _mapper;
 
-        public ProductoService(IGenericRepository<Producto> productRepo, IMapper mapper)
+        public ProductoService(IProductoRepository<Producto> productRepo, IMapper mapper)
         {
             this._producRepository = productRepo;
             this._mapper=mapper; 
@@ -34,6 +34,17 @@ namespace inaApp.Services
             //Valida stock
             if (entity.Stock <= 0) throw new InvalidStockException("El stock debe ser una cantidad positiva");
 
+            //Validar nombre
+            if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como producto");
+
+            //Validar que la categoria 
+            if (!await _producRepository.ValidarCategoriaProducto(entity.CategoriaId))
+            {
+                throw new NotFoundException("La categoría no existe o esta se encuentra inactiva.");
+            }
+
+          
+
             //Convertimos el dto a entidad
             Producto producto=_mapper.Map<Producto>(entity);
             //Extraemos el producto
@@ -42,7 +53,7 @@ namespace inaApp.Services
             //Validamos el producto
             if (resul is null)
             {
-                throw new NotFoundException($"Usuario no encontrado");
+                throw new NotFoundException($"El producto no puede venir vasio.");
             }
 
             //Convertimos el producto en dto
@@ -67,16 +78,22 @@ namespace inaApp.Services
                 if (entity.Stock <= 0) throw new InvalidStockException("El stock debe ser una cantidad positiva");
 
                 //Validar nombre
-                if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como producto");
+                if (await _producRepository.validarNombreRepetido(entity.Nombre)) throw new DuplicateNameException($"El nombre {entity.Nombre} ya se encuentra agregado como producto.");
+
+                //Validar que la categoria exista
+                if (!await _producRepository.ValidarCategoriaProducto(entity.CategoriaId))
+                {
+                    throw new NotFoundException("La categoría no existe o se encuentra inactiva.");
+                }
 
                 /*Producto producto=new Producto
-                { 
-                    Nombre=entity.Nombre,
-                    Precio=entity.Precio,
-                    Stock=entity.Stock,
-                    Descripcion=entity.Descripcion,
-                    Estado=true
-                };*/
+        { 
+            Nombre=entity.Nombre,
+            Precio=entity.Precio,
+            Stock=entity.Stock,
+            Descripcion=entity.Descripcion,
+            Estado=true
+        };*/
 
                 //Returnamos la respuesta del repositorio
                 Producto producto = _mapper.Map<Producto>(entity);
