@@ -43,8 +43,6 @@ namespace inaApp.Services
                 throw new NotFoundException("La categoría no existe o esta se encuentra inactiva.");
             }
 
-          
-
             //Convertimos el dto a entidad
             Producto producto=_mapper.Map<Producto>(entity);
             //Extraemos el producto
@@ -58,6 +56,7 @@ namespace inaApp.Services
 
             //Convertimos el producto en dto
             ProductoResponseDTO response= _mapper.Map<ProductoResponseDTO>(resul);
+
             //Retornamos el response dto
             return new ApiResponse<ProductoResponseDTO>
             {
@@ -86,28 +85,11 @@ namespace inaApp.Services
                     throw new NotFoundException("La categoría no existe o se encuentra inactiva.");
                 }
 
-                /*Producto producto=new Producto
-        { 
-            Nombre=entity.Nombre,
-            Precio=entity.Precio,
-            Stock=entity.Stock,
-            Descripcion=entity.Descripcion,
-            Estado=true
-        };*/
-
                 //Returnamos la respuesta del repositorio
                 Producto producto = _mapper.Map<Producto>(entity);
                 producto = await _producRepository.CrearAsync(producto);
 
-                /*ProductoResponseDTO productoResponse=new ProductoResponseDTO
-                {
-                    Id=producto.Id,
-                    Nombre = producto.Nombre,
-                    Precio = producto.Precio,
-                    Stock = producto.Stock,
-                    Descripcion = producto.Descripcion
-                };*/
-
+                //Retornamos el api response
                 return new ApiResponse<ProductoResponseDTO>
                 {
                     Data = _mapper.Map<ProductoResponseDTO>(producto),
